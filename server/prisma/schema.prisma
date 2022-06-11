@@ -1,0 +1,32 @@
+datasource postgres {
+  provider = "postgresql"
+  url      = env("POSTGRESQL_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  createdAt DateTime @default(now())
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     String[]
+  todos     Todo[]
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
+
+model Todo {
+  completed Boolean
+  createdAt DateTime  @default(now())
+  details   String?
+  dueDate   DateTime?
+  id        String    @id @default(cuid())
+  owner     User      @relation(fields: [ownerId], references: [id])
+  ownerId   String
+  summary   String
+  updatedAt DateTime  @updatedAt
+}
